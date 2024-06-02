@@ -1,55 +1,49 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { FIREBASE_AUTH } from '@/FirebaseConfig'
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  User,
-} from 'firebase/auth'
-import { KeyboardAvoidingView } from '@gluestack-ui/themed'
-import useUserStore from '@/store/userStore'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { setDoc, doc } from 'firebase/firestore'
+import { FIREBASE_DB as db } from '@/FirebaseConfig'
 
-export default function LoginScreen() {
-  const { setUser } = useUserStore()
+export default function CreateAccountScreen() {
+  const auth = FIREBASE_AUTH
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const auth = FIREBASE_AUTH
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      if (user) {
-        setUser(user)
-        router.push('/chatList')
-      } else {
-        setUser(null)
-      }
-    })
-
-    return () => unsubscribe()
-  }, [])
-
-  const handleSignIn = (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => router.push('/chatList'))
-      .catch(error => {
-        console.error('Error signing in:', setError(error.message))
-      })
+  const handleSignUp = (email: string, password: string) => {
+    try {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          const user = userCredential.user
+          setDoc(doc(db, 'users', user.uid), {
+            uid: user.uid,
+            email: email,
+            contacts: [],
+          })
+          router.push('/chatList')
+        })
+        .catch(error => {
+          setError(error.message)
+        })
+    } catch (error) {
+      console.error('Error signing up:', error)
+    }
   }
 
   useEffect(() => {
     if (error) {
       setTimeout(() => {
         setError('')
-      }, 7000)
+      }, 15000)
     }
   }, [error])
 
   return (
-    <KeyboardAvoidingView behavior='padding' style={styles.container}>
+    <View style={styles.container}>
       {error && (
         <Text
           style={{
@@ -61,12 +55,14 @@ export default function LoginScreen() {
             alignSelf: 'center',
           }}
         >
-          User e-mail or password incorrect!
+          {error === 'Firebase: Error (auth/email-already-in-use).'
+            ? 'Email already in use.'
+            : 'Invalid e-mail or password'}
         </Text>
       )}
       <View style={styles.headerAndSubTitle}>
         <Text style={styles.header}>ChatHub</Text>
-        <Text style={styles.subTitle}>A place to talk.</Text>
+        <Text style={styles.subTitle}>Create your account</Text>
       </View>
       <View style={styles.content}>
         <Input
@@ -76,7 +72,6 @@ export default function LoginScreen() {
         />
         <Input
           placeholder='Your Password'
-          secureText
           value={password}
           onChangeText={setPassword}
         />
@@ -84,21 +79,21 @@ export default function LoginScreen() {
           style='primary'
           isDisabled={false}
           isFocusVisible={false}
-          text='Login'
-          onPressed={() => handleSignIn(email, password)}
+          text='Create my account!'
+          onPressed={() => handleSignUp(email, password)}
         />
 
-        <Text style={styles.footer}>Don't have an account?</Text>
+        <Text style={styles.footer}>Already a member?</Text>
 
         <Button
           isDisabled={false}
           isFocusVisible={false}
           style='secondary'
-          text='Sign Up'
-          onPressed={() => router.push('/createAccount')}
+          text='Login'
+          onPressed={() => router.push('/')}
         />
       </View>
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
