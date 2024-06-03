@@ -11,6 +11,7 @@ import { FIREBASE_DB as db } from '@/FirebaseConfig'
 export default function CreateAccountScreen() {
   const auth = FIREBASE_AUTH
   const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
@@ -21,6 +22,7 @@ export default function CreateAccountScreen() {
           const user = userCredential.user
           setDoc(doc(db, 'users', user.uid), {
             uid: user.uid,
+            name: name,
             email: email,
             contacts: [],
           })
@@ -65,6 +67,7 @@ export default function CreateAccountScreen() {
         <Text style={styles.subTitle}>Create your account</Text>
       </View>
       <View style={styles.content}>
+        <Input placeholder='Your Name' value={name} onChangeText={setName} />
         <Input
           placeholder='Your E-mail'
           value={email}
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     paddingVertical: 20,
     gap: 30,
   },

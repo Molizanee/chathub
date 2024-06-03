@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router'
 import { GluestackUIProvider } from '@gluestack-ui/themed'
 import { config } from '@gluestack-ui/config'
+import { NavBar } from '@/components/NavBar'
 
 export default function RootLayout() {
   return (

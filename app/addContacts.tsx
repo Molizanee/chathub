@@ -60,7 +60,7 @@ export default function AddContacts() {
         }}
       >
         <Link href='/chatList' style={styles.iconBack}>
-          <ArrowLeftIcon color='#9E9E9E' />
+          <ArrowLeftIcon color='#9E9E9E' height={'$7'} width={'$7'} />
         </Link>
         <View style={styles.content}>
           <Text style={styles.header}>Add new contact</Text>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 25,
   },

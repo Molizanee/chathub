@@ -3,6 +3,7 @@ import { Message } from '@/components/Message'
 import {
   AddIcon,
   ArrowLeftIcon,
+  ArrowUpIcon,
   Avatar,
   AvatarBadge,
   AvatarFallbackText,
@@ -12,10 +13,12 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
@@ -33,6 +36,10 @@ export default function ConversationScreen() {
   const [chatId, setChatId] = useState('')
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
+  const [otherParticipant, setOtherParticipant] = useState({
+    name: 'User',
+    uid: '',
+  })
 
   const { id } = useLocalSearchParams()
 
@@ -40,7 +47,6 @@ export default function ConversationScreen() {
     const checkAndCreateChat = async () => {
       if (auth.currentUser) {
         const currentUserUid = auth.currentUser.uid
-        // Check if chat exists
         const chatsRef = collection(db, 'chats')
         const q = query(
           chatsRef,
@@ -53,17 +59,26 @@ export default function ConversationScreen() {
 
         if (chat) {
           setChatId(chat.id)
+          const otherUid = chat
+            .data()
+            .participants.find(uid => uid !== currentUserUid)
+          const otherUserRef = doc(db, 'users', otherUid)
+          const otherUserSnap = await getDoc(otherUserRef)
+          if (otherUserSnap.exists()) {
+            setOtherParticipant(otherUserSnap.data())
+          }
         } else {
-          // Create a new chat if it does not exist
           const newChatRef = await addDoc(chatsRef, {
             participants: [currentUserUid, id],
             createdAt: serverTimestamp(),
+            lastMessage: { text: '', sentBy: '', timestamp: serverTimestamp() },
           })
           setChatId(newChatRef.id)
         }
       }
     }
 
+    console.log(otherParticipant)
     checkAndCreateChat()
   }, [id])
 
@@ -86,11 +101,21 @@ export default function ConversationScreen() {
 
   const handleSend = async () => {
     if (newMessage.trim() === '' || !chatId) return
+
     const messageRef = collection(db, 'chats', chatId, 'messages')
     await addDoc(messageRef, {
       text: newMessage,
       sentBy: auth.currentUser.uid,
       timestamp: serverTimestamp(),
+    })
+
+    await updateDoc(doc(db, 'chats', chatId), {
+      lastUpdated: serverTimestamp(),
+      lastMessage: {
+        text: newMessage,
+        sentBy: auth.currentUser.uid,
+        timestamp: serverTimestamp(),
+      },
     })
 
     setNewMessage('')
@@ -100,26 +125,32 @@ export default function ConversationScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <Link href='/chatList' style={styles.iconBack}>
-          <ArrowLeftIcon color='#9E9E9E' />
+          <ArrowLeftIcon color='#9E9E9E' height={'$7'} width={'$7'} />
         </Link>
         <View style={styles.header}>
           <Avatar bgColor='#0FA6FA' size='lg'>
-            <AvatarFallbackText>D</AvatarFallbackText>
+            <AvatarFallbackText>{otherParticipant.name[0]}</AvatarFallbackText>
             <AvatarBadge $dark-borderColor='$black' />
           </Avatar>
-          <Text style={styles.userName}>Chat with {id}</Text>
+          <Text style={styles.userName}>{otherParticipant.name}</Text>
         </View>
         <ScrollView>
           {messages.map(msg => (
             <Message
               key={msg.id}
-              dateSend={'msg.timestamp'}
+              dateSend={
+                msg.timestamp ? msg.timestamp.toDate().toString() : 'Loading...'
+              }
               message={msg.text}
+              userName={
+                msg.sentBy === auth.currentUser.uid
+                  ? 'You'
+                  : otherParticipant.name
+              }
             />
           ))}
         </ScrollView>
       </View>
-
       <View style={styles.inputAndIcon}>
         <Input
           value={newMessage}
@@ -127,7 +158,7 @@ export default function ConversationScreen() {
           placeholder='New Message...'
         />
         <TouchableOpacity onPress={handleSend} style={styles.sendIcon}>
-          <AddIcon color='white' />
+          <ArrowUpIcon color='white' w='$7' h='$7' />
         </TouchableOpacity>
       </View>
     </View>
@@ -141,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 25,
     gap: 20,

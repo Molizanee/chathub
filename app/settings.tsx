@@ -27,7 +27,7 @@ export default function Settings() {
         backgroundColor: '#FFFFFF',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 40,
+        paddingHorizontal: 20,
         paddingTop: 60,
         paddingBottom: 25,
       }}

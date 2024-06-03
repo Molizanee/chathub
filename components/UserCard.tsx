@@ -26,16 +26,28 @@ export const UserCard = ({ name, message, contactId }: UserCardProps) => {
       <VStack space='2xl'>
         <HStack space='md'>
           <Avatar bgColor='#0FA6FA' size='lg'>
-            <AvatarFallbackText>AVT</AvatarFallbackText>
+            <AvatarFallbackText>{name[0]}</AvatarFallbackText>
             <AvatarBadge $dark-borderColor='$black' />
           </Avatar>
-          <VStack>
+          <VStack
+            style={{
+              maxWidth: '80%',
+            }}
+          >
             <Heading
               style={{ fontSize: 20, fontWeight: '500', color: '#0FA6FA' }}
             >
               {name}
             </Heading>
-            <Text style={{ fontSize: 20, fontWeight: '400', color: '#9E9E9E' }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: '400',
+                color: '#9E9E9E',
+              }}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+            >
               {message}
             </Text>
           </VStack>

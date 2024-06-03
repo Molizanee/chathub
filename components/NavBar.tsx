@@ -1,4 +1,5 @@
 import {
+  AtSignIcon,
   Icon,
   MessageCircleIcon,
   SettingsIcon,
@@ -25,7 +26,7 @@ export const NavBar = () => {
       </Link>
       <Link style={styles.iconLink} href='/contacts' asChild>
         <Icon
-          as={ShareIcon}
+          as={AtSignIcon}
           m='$2'
           w='$10'
           h='$10'
@@ -49,11 +50,13 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
+    gap: 30,
     shadowColor: '#000',
     shadowOpacity: 0.12,
     shadowOffset: { width: 0, height: 0 },
+    elevation: 10,
     shadowRadius: 10,
     width: '100%',
     borderRadius: 15,

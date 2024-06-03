@@ -41,16 +41,22 @@ export default function Contacts() {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.header}>All contacts</Text>
-        <View style={styles.contacts}>
-          {contacts.map((contact, index) => (
-            <UserCard
-              key={index}
-              name={contact.name || 'Unnamed User'} // Default name if not available
-              message={contact.email} // Display email in the message field
-              contactId={contact.uid} // Pass the UID as contactId
-            />
-          ))}
-        </View>
+        {contacts.length === 0 ? (
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#9E9E9E' }}>
+            You don't add any contact!
+          </Text>
+        ) : (
+          <View style={styles.contacts}>
+            {contacts.map((contact, index) => (
+              <UserCard
+                key={index}
+                name={contact.name || 'Unnamed User'} // Default name if not available
+                message={contact.email} // Display email in the message field
+                contactId={contact.uid} // Pass the UID as contactId
+              />
+            ))}
+          </View>
+        )}
       </View>
       <View style={styles.bottomBar}>
         <Link
@@ -60,7 +66,7 @@ export default function Contacts() {
           }}
         >
           <View style={styles.addIcon}>
-            <AddIcon color='white' />
+            <AddIcon color='white' w='$7' h='$7' />
           </View>
         </Link>
         <NavBar />
@@ -75,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 25,
   },
