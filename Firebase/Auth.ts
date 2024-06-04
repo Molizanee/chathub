@@ -56,3 +56,13 @@ export const signOutFirebase = () => {
       console.error('Error signing out:', error)
     })
 }
+
+export const checkUserAuthenticationFirebase = () => {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      router.push('/chatList')
+    } else {
+      router.push('/')
+    }
+  })
+}

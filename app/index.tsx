@@ -3,12 +3,15 @@ import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { FIREBASE_AUTH } from '@/Firebase/FirebaseConfig'
-import { onAuthStateChanged } from 'firebase/auth'
 import { KeyboardAvoidingView } from '@gluestack-ui/themed'
-import { signInFirebase } from '@/Firebase/Auth'
+import {
+  checkUserAuthenticationFirebase,
+  signInFirebase,
+} from '@/Firebase/Auth'
 
 export default function LoginScreen() {
+  checkUserAuthenticationFirebase()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')

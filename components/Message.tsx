@@ -4,7 +4,7 @@ import { Text, View } from 'react-native'
 interface MessageProps {
   message: string
   dateSend: string
-  userName: string
+  userName: string | undefined
 }
 
 export const Message = ({ message, dateSend, userName }: MessageProps) => {
@@ -53,7 +53,7 @@ export const Message = ({ message, dateSend, userName }: MessageProps) => {
           {dateSend}
         </Text>
         <Avatar bgColor='#0FA6FA' size='sm'>
-          <AvatarFallbackText>{userName[0]}</AvatarFallbackText>
+          <AvatarFallbackText>{userName && userName[0]}</AvatarFallbackText>
           <AvatarBadge $dark-borderColor='$black' />
         </Avatar>
       </View>

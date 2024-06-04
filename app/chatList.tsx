@@ -11,17 +11,14 @@ export default function ChatListScreen() {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    // Subscribe to chat updates
     const fetchAndUnsubscribe = async () => {
       const unsubscribe = await getChatListFirebase(setChats)
 
-      // Clean up the subscription when the component unmounts
       return unsubscribe
     }
     fetchAndUnsubscribe()
   }, [])
 
-  // Filter chats based on user input
   const filteredChats = chats.filter(
     chat =>
       chat.name?.toLowerCase().includes(filter.toLowerCase()) ||
