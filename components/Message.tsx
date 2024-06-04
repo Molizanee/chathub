@@ -3,11 +3,10 @@ import { Text, View } from 'react-native'
 
 interface MessageProps {
   message: string
-  dateSend: string
   userName: string | undefined
 }
 
-export const Message = ({ message, dateSend, userName }: MessageProps) => {
+export const Message = ({ message, userName }: MessageProps) => {
   return (
     <View
       style={{

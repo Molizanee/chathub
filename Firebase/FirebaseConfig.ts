@@ -3,13 +3,13 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCiHTt1ZbP2CILiG7MO-VnDDIZbUwMuyMY',
-  authDomain: 'chathub-e74f4.firebaseapp.com',
-  projectId: 'chathub-e74f4',
-  storageBucket: 'chathub-e74f4.appspot.com',
-  messagingSenderId: '477985381153',
-  appId: '1:477985381153:web:f195c2752656b41636bc60',
-  measurementId: 'G-5KWY0H8KFY',
+  apiKey: process.env.EXPO_PUBLIC_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_APP_ID,
+  measurementId: process.env.EXPO_PUBLIC_MEASUREMENT_ID,
 }
 
 export const FIREBASE_APP = initializeApp(firebaseConfig)
