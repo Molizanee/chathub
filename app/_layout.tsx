@@ -14,7 +14,7 @@ export default function RootLayout() {
         <Stack.Screen name='chatList' />
         <Stack.Screen name='index' />
         <Stack.Screen name='createAccount' />
-        <Stack.Screen name='chat' />
+        <Stack.Screen name='chat/[id]' />
         <Stack.Screen name='contacts' />
         <Stack.Screen name='addContacts' />
         <Stack.Screen name='settings' />
