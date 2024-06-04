@@ -11,17 +11,14 @@ export default function ChatListScreen() {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    // Subscribe to chat updates
     const fetchAndUnsubscribe = async () => {
       const unsubscribe = await getChatListFirebase(setChats)
 
-      // Clean up the subscription when the component unmounts
       return unsubscribe
     }
     fetchAndUnsubscribe()
   }, [])
 
-  // Filter chats based on user input
   const filteredChats = chats.filter(
     chat =>
       chat.name?.toLowerCase().includes(filter.toLowerCase()) ||
@@ -41,15 +38,20 @@ export default function ChatListScreen() {
             Add a contact to start a chat!
           </Text>
         ) : (
-          <ScrollView style={styles.messages}>
+          <ScrollView
+            style={styles.messages}
+            showsVerticalScrollIndicator={false}
+          >
             {filteredChats.map(chat => (
-              <UserCard
-                key={chat.id}
-                name={chat.name}
-                message={chat.lastMessage}
-                date={chat.lastUpdated.toLocaleString()}
-                contactId={chat.otherUid}
-              />
+              <View key={chat.id} style={styles.message}>
+                <UserCard
+                  key={chat.id}
+                  name={chat.name}
+                  message={chat.lastMessage}
+                  date={chat.lastUpdated.toLocaleString()}
+                  contactId={chat.otherUid}
+                />
+              </View>
             ))}
           </ScrollView>
         )}
@@ -78,5 +80,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     width: '100%',
+  },
+  message: {
+    flex: 1,
+    marginBottom: 20,
   },
 })

@@ -23,14 +23,19 @@ export default function Contacts() {
             You don't add any contact!
           </Text>
         ) : (
-          <ScrollView style={styles.contacts}>
-            {contacts.map((contact, index) => (
-              <UserCard
-                key={index}
-                name={contact.name || 'Unnamed User'}
-                message={contact.email}
-                contactId={contact.uid}
-              />
+          <ScrollView
+            style={styles.contacts}
+            showsVerticalScrollIndicator={false}
+          >
+            {contacts.map(contact => (
+              <View style={styles.contact} key={contact.uid}>
+                <UserCard
+                  key={contact.uid}
+                  name={contact.name || 'Unnamed User'}
+                  message={contact.email}
+                  contactId={contact.uid}
+                />
+              </View>
             ))}
           </ScrollView>
         )}
@@ -76,6 +81,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     gap: 20,
+  },
+  contact: {
+    flex: 1,
+    marginBottom: 20,
   },
   bottomBar: {
     flexDirection: 'column',

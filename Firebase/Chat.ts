@@ -70,8 +70,7 @@ export const createChatDataFirebase = async (
     id: document.id,
     lastMessage: data.lastMessage?.text,
     lastUpdated: data.lastUpdated?.toDate() || new Date(),
-    timestamp:
-      data.lastMessage?.timestamp?.toDate().toString() || 'Unknown time',
+    timestamp: data.lastMessage?.timestamp?.toDate() || new Date(),
     name: userDetails[0]?.name,
     email: userDetails[0]?.email,
     otherUid: userDetails[0]?.uid,

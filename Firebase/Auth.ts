@@ -5,9 +5,7 @@ import {
   signOut,
 } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
-import { FIREBASE_DB as db, FIREBASE_AUTH } from './FirebaseConfig'
-
-const auth = FIREBASE_AUTH
+import { FIREBASE_DB as db, FIREBASE_AUTH as auth } from './FirebaseConfig'
 
 export const signInFirebase = (
   email: string,
@@ -55,4 +53,12 @@ export const signOutFirebase = () => {
     .catch(error => {
       console.error('Error signing out:', error)
     })
+}
+function getReactNativePersistence(
+  ReactNativeAsyncStorage: any
+):
+  | import('@firebase/auth').Persistence
+  | import('@firebase/auth').Persistence[]
+  | undefined {
+  throw new Error('Function not implemented.')
 }

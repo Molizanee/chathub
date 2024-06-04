@@ -9,7 +9,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { FIREBASE_DB as db, FIREBASE_AUTH } from './FirebaseConfig'
-import { ChatData, Contact, Message, User } from './Types'
+import { Contact } from './Types'
 const auth = FIREBASE_AUTH
 
 export const fetchContactsFirebase = async (

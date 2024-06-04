@@ -8,7 +8,7 @@ import {
   AvatarFallbackText,
 } from '@gluestack-ui/themed'
 import { Link, useLocalSearchParams } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Text,
   View,
@@ -48,9 +48,17 @@ export default function ConversationScreen() {
     }
   }, [chatId])
 
+  const scrollViewRef = useRef<ScrollView>(null)
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true })
+  }, [messages])
+
   const handleSend = async () => {
     sendMessageFirebase(chatId, newMessage, setNewMessage)
   }
+
+  const date = new Date()
 
   return (
     <View style={styles.container}>
@@ -65,13 +73,10 @@ export default function ConversationScreen() {
           </Avatar>
           <Text style={styles.userName}>{otherParticipant?.name}</Text>
         </View>
-        <ScrollView>
+        <ScrollView ref={scrollViewRef}>
           {messages.map(msg => (
             <Message
               key={msg.id}
-              dateSend={
-                msg.timestamp ? msg.timestamp.toLocaleString() : 'Loading...'
-              }
               message={msg.text}
               userName={
                 msg.sentBy !== FIREBASE_AUTH?.currentUser?.uid
