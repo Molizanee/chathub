@@ -13,7 +13,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { FIREBASE_DB as db, FIREBASE_AUTH } from './FirebaseConfig'
-import { ChatData, Message, User } from './Types'
+import { ChatData, CompleteMessage, User } from './Types'
 const auth = FIREBASE_AUTH
 
 export type SetChatsFunction = (chats: ChatData[]) => void
@@ -24,7 +24,6 @@ export const getChatListFirebase = async (
   if (auth.currentUser) {
     return subscribeToChatsFirebase(auth.currentUser.uid, setChats)
   } else {
-    // Return a no-operation function if no user is logged in
     return () => {}
   }
 }
@@ -149,23 +148,25 @@ export const checkAndCreateChatFirebase = async (
 
 export const subscribeToMessagesFirebase = (
   chatId: string,
-  setMessages: (messages: Message[]) => void
+  setMessages: (messages: CompleteMessage[]) => void
 ) => {
   if (!chatId) return () => {}
 
   return onSnapshot(collection(db, 'chats', chatId, 'messages'), snapshot => {
-    const loadedMessages: Message[] = snapshot.docs
+    const loadedMessages: CompleteMessage[] = snapshot.docs
       .map(doc => ({
         id: doc.id,
         timestamp: doc.data().timestamp,
         ...doc.data(),
+        text: doc.data().text,
+        sentBy: doc.data().sentBy,
       }))
       .sort((a, b) => a.timestamp - b.timestamp)
     setMessages(loadedMessages)
   })
 }
 
-export const handleSendMessage = async (
+export const sendMessageFirebase = async (
   chatId: string,
   newMessage: string,
   setNewMessage: (message: string) => void

@@ -1,7 +1,6 @@
 import { Input } from '@/components/Input'
 import { Message } from '@/components/Message'
 import {
-  AddIcon,
   ArrowLeftIcon,
   ArrowUpIcon,
   Avatar,
@@ -9,18 +8,6 @@ import {
   AvatarFallbackText,
 } from '@gluestack-ui/themed'
 import { Link, useLocalSearchParams } from 'expo-router'
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  serverTimestamp,
-  updateDoc,
-  where,
-} from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import {
   Text,
@@ -29,96 +16,40 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native'
-import { FIREBASE_DB as db, FIREBASE_AUTH } from '@/Firebase/FirebaseConfig'
+import {
+  checkAndCreateChatFirebase,
+  sendMessageFirebase,
+  subscribeToMessagesFirebase,
+} from '@/Firebase/Chat'
+import { CompleteMessage, Message as MessageType, User } from '@/Firebase/Types'
+import { FIREBASE_AUTH } from '@/Firebase/FirebaseConfig'
 
 export default function ConversationScreen() {
-  const auth = FIREBASE_AUTH
   const [chatId, setChatId] = useState('')
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<CompleteMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
-  const [otherParticipant, setOtherParticipant] = useState({
-    name: 'User',
+  const [otherParticipant, setOtherParticipant] = useState<User | null>({
     uid: '',
+    email: '',
+    name: 'User',
   })
 
-  const { id } = useLocalSearchParams()
+  const { id }: { id: string } = useLocalSearchParams() ?? {
+    id: '',
+  }
 
   useEffect(() => {
-    const checkAndCreateChat = async () => {
-      if (auth.currentUser) {
-        const currentUserUid = auth.currentUser.uid
-        const chatsRef = collection(db, 'chats')
-        const q = query(
-          chatsRef,
-          where('participants', 'array-contains', currentUserUid)
-        )
-        const querySnapshot = await getDocs(q)
-        const chat = querySnapshot.docs.find(doc =>
-          doc.data().participants.includes(id)
-        )
-
-        if (chat) {
-          setChatId(chat.id)
-          const otherUid = chat
-            .data()
-            .participants.find(uid => uid !== currentUserUid)
-          const otherUserRef = doc(db, 'users', otherUid)
-          const otherUserSnap = await getDoc(otherUserRef)
-          if (otherUserSnap.exists()) {
-            setOtherParticipant(otherUserSnap.data())
-          }
-        } else {
-          const newChatRef = await addDoc(chatsRef, {
-            participants: [currentUserUid, id],
-            createdAt: serverTimestamp(),
-            lastMessage: { text: '', sentBy: '', timestamp: serverTimestamp() },
-          })
-          setChatId(newChatRef.id)
-        }
-      }
-    }
-
-    console.log(otherParticipant)
-    checkAndCreateChat()
+    checkAndCreateChatFirebase(id, setChatId, setOtherParticipant)
   }, [id])
 
   useEffect(() => {
     if (chatId) {
-      const unsubscribe = onSnapshot(
-        collection(db, 'chats', chatId, 'messages'),
-        snapshot => {
-          const loadedMessages = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          setMessages(loadedMessages.sort((a, b) => a.timestamp - b.timestamp))
-        }
-      )
-
-      return () => unsubscribe() // Cleanup subscription on unmount
+      subscribeToMessagesFirebase(chatId, setMessages)
     }
   }, [chatId])
 
   const handleSend = async () => {
-    if (newMessage.trim() === '' || !chatId) return
-
-    const messageRef = collection(db, 'chats', chatId, 'messages')
-    await addDoc(messageRef, {
-      text: newMessage,
-      sentBy: auth.currentUser.uid,
-      timestamp: serverTimestamp(),
-    })
-
-    await updateDoc(doc(db, 'chats', chatId), {
-      lastUpdated: serverTimestamp(),
-      lastMessage: {
-        text: newMessage,
-        sentBy: auth.currentUser.uid,
-        timestamp: serverTimestamp(),
-      },
-    })
-
-    setNewMessage('')
+    sendMessageFirebase(chatId, newMessage, setNewMessage)
   }
 
   return (
@@ -129,10 +60,10 @@ export default function ConversationScreen() {
         </Link>
         <View style={styles.header}>
           <Avatar bgColor='#0FA6FA' size='lg'>
-            <AvatarFallbackText>{otherParticipant.name[0]}</AvatarFallbackText>
+            <AvatarFallbackText>{otherParticipant?.name[0]}</AvatarFallbackText>
             <AvatarBadge $dark-borderColor='$black' />
           </Avatar>
-          <Text style={styles.userName}>{otherParticipant.name}</Text>
+          <Text style={styles.userName}>{otherParticipant?.name}</Text>
         </View>
         <ScrollView>
           {messages.map(msg => (
@@ -143,9 +74,9 @@ export default function ConversationScreen() {
               }
               message={msg.text}
               userName={
-                msg.sentBy === auth.currentUser.uid
-                  ? 'You'
-                  : otherParticipant.name
+                msg.sentBy !== FIREBASE_AUTH?.currentUser?.uid
+                  ? otherParticipant?.name
+                  : 'You'
               }
             />
           ))}

@@ -19,6 +19,11 @@ export type Message = {
   timestamp: number
 }
 
+export type CompleteMessage = Message & {
+  text: string
+  sentBy: string
+}
+
 export type Contact = {
   uid: string
 }
