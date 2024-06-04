@@ -54,6 +54,13 @@
      npm install firebase
      ```
    - Copie as chaves de configuração do `firebaseConfig`:
+   - Dentro da aba de **criação** na lateral esquerda do dashboard do Firebase:
+     - Habilite o serviço de **Authentication**
+       - Habilite o método de login via **E-mail/Senha**
+     - Crie um banco de dados noSQL com o **Firestore**
+       - Ajuste o local do banco para **southamerica-east1 (São Paulo)**
+       - Marque para iniciar no **modo de teste**
+   - Volte para dentro do projeto no seu editor de código
 
 4. **Configurar Variáveis de Ambiente**
 
