@@ -54,11 +54,3 @@ export const signOutFirebase = () => {
       console.error('Error signing out:', error)
     })
 }
-function getReactNativePersistence(
-  ReactNativeAsyncStorage: any
-):
-  | import('@firebase/auth').Persistence
-  | import('@firebase/auth').Persistence[]
-  | undefined {
-  throw new Error('Function not implemented.')
-}

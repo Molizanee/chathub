@@ -1,6 +1,5 @@
 import { NavBar } from '@/components/NavBar'
 import { UserCard } from '@/components/UserCard'
-import { FIREBASE_AUTH } from '@/Firebase/FirebaseConfig'
 import { AddIcon } from '@gluestack-ui/themed'
 import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
@@ -8,7 +7,7 @@ import { View, StyleSheet, Text, ScrollView } from 'react-native'
 import { fetchContactsFirebase } from '@/Firebase/Contacts'
 
 export default function Contacts() {
-  const [contacts, setContacts] = useState<Array<any>>([]) // Specify the type argument for the useState hook
+  const [contacts, setContacts] = useState<Array<any>>([])
 
   useEffect(() => {
     fetchContactsFirebase(setContacts)

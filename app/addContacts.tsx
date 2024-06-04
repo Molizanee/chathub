@@ -3,15 +3,6 @@ import { Input } from '@/components/Input'
 import { NavBar } from '@/components/NavBar'
 import { ArrowLeftIcon } from '@gluestack-ui/themed'
 import { Link } from 'expo-router'
-import {
-  arrayUnion,
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore'
 import { useState } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { handleAddContactFirebase } from '@/Firebase/Contacts'
