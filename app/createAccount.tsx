@@ -3,37 +3,16 @@ import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { FIREBASE_AUTH } from '@/FirebaseConfig'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { setDoc, doc } from 'firebase/firestore'
-import { FIREBASE_DB as db } from '@/FirebaseConfig'
+import { signUpFirebase } from '@/Firebase/Auth'
 
 export default function CreateAccountScreen() {
-  const auth = FIREBASE_AUTH
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const handleSignUp = (email: string, password: string) => {
-    try {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          const user = userCredential.user
-          setDoc(doc(db, 'users', user.uid), {
-            uid: user.uid,
-            name: name,
-            email: email,
-            contacts: [],
-          })
-          router.push('/chatList')
-        })
-        .catch(error => {
-          setError(error.message)
-        })
-    } catch (error) {
-      console.error('Error signing up:', error)
-    }
+  const handleSignUp = async () => {
+    await signUpFirebase(name, email, password, setError)
   }
 
   useEffect(() => {
@@ -47,19 +26,10 @@ export default function CreateAccountScreen() {
   return (
     <View style={styles.container}>
       {error && (
-        <Text
-          style={{
-            position: 'absolute',
-            color: 'red',
-            fontSize: 16,
-            marginTop: 140,
-            top: 0,
-            alignSelf: 'center',
-          }}
-        >
+        <Text style={styles.error}>
           {error === 'Firebase: Error (auth/email-already-in-use).'
             ? 'Email already in use.'
-            : 'Invalid e-mail or password'}
+            : error}
         </Text>
       )}
       <View style={styles.headerAndSubTitle}>
@@ -83,7 +53,7 @@ export default function CreateAccountScreen() {
           isDisabled={false}
           isFocusVisible={false}
           text='Create my account!'
-          onPressed={() => handleSignUp(email, password)}
+          onPressed={() => handleSignUp()}
         />
 
         <Text style={styles.footer}>Already a member?</Text>
@@ -118,6 +88,14 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 24,
     color: '#9E9E9E',
+  },
+  error: {
+    position: 'absolute',
+    color: 'red',
+    fontSize: 16,
+    marginTop: 140,
+    top: 0,
+    alignSelf: 'center',
   },
   headerAndSubTitle: {
     flexDirection: 'column',

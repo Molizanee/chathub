@@ -29,7 +29,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native'
-import { FIREBASE_DB as db, FIREBASE_AUTH } from '@/FirebaseConfig'
+import { FIREBASE_DB as db, FIREBASE_AUTH } from '@/Firebase/FirebaseConfig'
 
 export default function ConversationScreen() {
   const auth = FIREBASE_AUTH
@@ -139,7 +139,7 @@ export default function ConversationScreen() {
             <Message
               key={msg.id}
               dateSend={
-                msg.timestamp ? msg.timestamp.toDate().toString() : 'Loading...'
+                msg.timestamp ? msg.timestamp.toLocaleString() : 'Loading...'
               }
               message={msg.text}
               userName={

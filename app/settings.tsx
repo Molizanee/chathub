@@ -1,76 +1,18 @@
 import { NavBar } from '@/components/NavBar'
-import { FIREBASE_AUTH } from '@/FirebaseConfig'
-import useUserStore from '@/store/userStore'
+import { signOutFirebase } from '@/Firebase/Auth'
 import { Button, ButtonText } from '@gluestack-ui/themed'
-import { router } from 'expo-router'
-import { signOut } from 'firebase/auth'
-import { Text, View } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 
-const auth = FIREBASE_AUTH
-
-function handleLogout() {
-  signOut(auth)
-    .then(() => {
-      router.push('/')
-    })
-    .catch(error => {
-      console.error('Error signing out:', error)
-    })
+const handleLogout = async () => {
+  await signOutFirebase()
 }
 
 export default function Settings() {
-  const { user } = useUserStore()
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#FFFFFF',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingTop: 60,
-        paddingBottom: 25,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: '500',
-          color: '#0FA6FA',
-          alignSelf: 'flex-start',
-        }}
-      >
-        Settings
-      </Text>
-      {user?.email && (
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: '500',
-            color: '#9E9E9E',
-            alignSelf: 'flex-start',
-            marginTop: 15,
-          }}
-        >
-          {`Your e-mail: ${(user as { email: string }).email || 'No user'}`}
-        </Text>
-      )}
-
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Button
-          onPress={handleLogout}
-          style={{
-            backgroundColor: 'red',
-            borderRadius: 15,
-            alignItems: 'center',
-          }}
-        >
+    <View style={styles.container}>
+      <Text style={styles.title}>Settings</Text>
+      <View style={styles.content}>
+        <Button onPress={handleLogout} style={styles.button}>
           <ButtonText color='#FFFF'>Log-out</ButtonText>
         </Button>
       </View>
@@ -78,3 +20,31 @@ export default function Settings() {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 25,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '500',
+    color: '#0FA6FA',
+    alignSelf: 'flex-start',
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    backgroundColor: 'red',
+    borderRadius: 15,
+    alignItems: 'center',
+  },
+})

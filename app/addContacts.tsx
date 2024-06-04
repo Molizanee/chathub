@@ -14,40 +14,13 @@ import {
 } from 'firebase/firestore'
 import { useState } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import { FIREBASE_DB as db, FIREBASE_AUTH } from '@/FirebaseConfig'
+import { handleAddContactFirebase } from '@/Firebase/Contacts'
 
 export default function AddContacts() {
   const [email, setEmail] = useState('')
-  const auth = FIREBASE_AUTH
+
   const handleAddContact = async () => {
-    if (email) {
-      try {
-        // Query for user by email
-        const usersRef = collection(db, 'users')
-        const q = query(usersRef, where('email', '==', email))
-        const querySnapshot = await getDocs(q)
-
-        if (!querySnapshot.empty) {
-          const userToAdd = querySnapshot.docs[0] // Assuming email is unique and only one doc should be returned
-          const userDocRef = doc(db, 'users', auth.currentUser.uid)
-
-          // Update current user's contacts to include new contact's UID
-          await updateDoc(userDocRef, {
-            contacts: arrayUnion(userToAdd.id), // Adding UID instead of email
-          })
-
-          alert('Contact added successfully!')
-          setEmail('')
-        } else {
-          alert('No user found with that email')
-        }
-      } catch (error) {
-        console.error('Failed to add contact: ', error)
-        alert('Failed to add contact')
-      }
-    } else {
-      alert('Please enter a valid email address')
-    }
+    handleAddContactFirebase(email, setEmail)
   }
 
   return (

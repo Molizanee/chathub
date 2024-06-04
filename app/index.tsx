@@ -3,41 +3,18 @@ import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { FIREBASE_AUTH } from '@/FirebaseConfig'
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  User,
-} from 'firebase/auth'
+import { FIREBASE_AUTH } from '@/Firebase/FirebaseConfig'
+import { onAuthStateChanged } from 'firebase/auth'
 import { KeyboardAvoidingView } from '@gluestack-ui/themed'
-import useUserStore from '@/store/userStore'
+import { signInFirebase } from '@/Firebase/Auth'
 
 export default function LoginScreen() {
-  const { setUser } = useUserStore()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const auth = FIREBASE_AUTH
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      if (user) {
-        setUser(user)
-        router.push('/chatList')
-      } else {
-        setUser(null)
-      }
-    })
-
-    return () => unsubscribe()
-  }, [])
-
-  const handleSignIn = (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => router.push('/chatList'))
-      .catch(error => {
-        console.error('Error signing in:', setError(error.message))
-      })
+  const handleSignIn = async () => {
+    await signInFirebase(email, password, setError)
   }
 
   useEffect(() => {
@@ -51,18 +28,7 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView behavior='padding' style={styles.container}>
       {error && (
-        <Text
-          style={{
-            position: 'absolute',
-            color: 'red',
-            fontSize: 16,
-            marginTop: 140,
-            top: 0,
-            alignSelf: 'center',
-          }}
-        >
-          User e-mail or password incorrect!
-        </Text>
+        <Text style={styles.error}>User e-mail or password incorrect!</Text>
       )}
       <View style={styles.headerAndSubTitle}>
         <Text style={styles.header}>ChatHub</Text>
@@ -85,7 +51,7 @@ export default function LoginScreen() {
           isDisabled={false}
           isFocusVisible={false}
           text='Login'
-          onPressed={() => handleSignIn(email, password)}
+          onPressed={() => handleSignIn()}
         />
 
         <Text style={styles.footer}>Don't have an account?</Text>
@@ -120,6 +86,14 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 24,
     color: '#9E9E9E',
+  },
+  error: {
+    position: 'absolute',
+    color: 'red',
+    fontSize: 16,
+    marginTop: 140,
+    top: 0,
+    alignSelf: 'center',
   },
   headerAndSubTitle: {
     flexDirection: 'column',

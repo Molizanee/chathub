@@ -1,41 +1,18 @@
 import { NavBar } from '@/components/NavBar'
 import { UserCard } from '@/components/UserCard'
-import { FIREBASE_AUTH } from '@/FirebaseConfig'
+import { FIREBASE_AUTH } from '@/Firebase/FirebaseConfig'
 import { AddIcon } from '@gluestack-ui/themed'
 import { Link } from 'expo-router'
-import { doc, getDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
-import { FIREBASE_DB as db } from '@/FirebaseConfig'
+import { View, StyleSheet, Text, ScrollView } from 'react-native'
+import { fetchContactsFirebase } from '@/Firebase/Contacts'
 
 export default function Contacts() {
-  const auth = FIREBASE_AUTH
-  const [contacts, setContacts] = useState([])
+  const [contacts, setContacts] = useState<Array<any>>([]) // Specify the type argument for the useState hook
 
   useEffect(() => {
-    const fetchContacts = async () => {
-      if (auth.currentUser) {
-        const userDocRef = doc(db, 'users', auth.currentUser.uid)
-        const docSnap = await getDoc(userDocRef)
-        if (docSnap.exists()) {
-          const userData = docSnap.data()
-          const contactsPromises = userData.contacts.map(async contactUid => {
-            const contactDocRef = doc(db, 'users', contactUid)
-            const contactDocSnap = await getDoc(contactDocRef)
-            if (contactDocSnap.exists()) {
-              return { uid: contactUid, ...contactDocSnap.data() }
-            }
-            return null
-          })
-          const contactsDetails = await Promise.all(contactsPromises)
-          setContacts(contactsDetails.filter(Boolean)) // Filter out any nulls from failed fetches
-        } else {
-          console.log('No such document!')
-        }
-      }
-    }
-    fetchContacts()
-  }, [auth.currentUser])
+    fetchContactsFirebase(setContacts)
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -46,16 +23,16 @@ export default function Contacts() {
             You don't add any contact!
           </Text>
         ) : (
-          <View style={styles.contacts}>
+          <ScrollView style={styles.contacts}>
             {contacts.map((contact, index) => (
               <UserCard
                 key={index}
-                name={contact.name || 'Unnamed User'} // Default name if not available
-                message={contact.email} // Display email in the message field
-                contactId={contact.uid} // Pass the UID as contactId
+                name={contact.name || 'Unnamed User'}
+                message={contact.email}
+                contactId={contact.uid}
               />
             ))}
-          </View>
+          </ScrollView>
         )}
       </View>
       <View style={styles.bottomBar}>

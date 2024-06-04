@@ -7,16 +7,17 @@ import {
   VStack,
 } from '@gluestack-ui/themed'
 import { Link } from 'expo-router'
-import { View, Text, StyleSheet } from 'react-native'
+import { Text, StyleSheet, View } from 'react-native'
 
 interface UserCardProps {
   image?: string
-  name: string
+  name?: string
   message?: string
-  contactId: string
+  contactId?: string
+  date?: string
 }
 
-export const UserCard = ({ name, message, contactId }: UserCardProps) => {
+export const UserCard = ({ name, message, contactId, date }: UserCardProps) => {
   return (
     <Link
       href={{
@@ -24,9 +25,15 @@ export const UserCard = ({ name, message, contactId }: UserCardProps) => {
       }}
     >
       <VStack space='2xl'>
-        <HStack space='md'>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 15,
+          }}
+        >
           <Avatar bgColor='#0FA6FA' size='lg'>
-            <AvatarFallbackText>{name[0]}</AvatarFallbackText>
+            <AvatarFallbackText>{name ? name[0] : 'A'}</AvatarFallbackText>
             <AvatarBadge $dark-borderColor='$black' />
           </Avatar>
           <VStack
@@ -50,8 +57,18 @@ export const UserCard = ({ name, message, contactId }: UserCardProps) => {
             >
               {message}
             </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color: '#9E9E9E',
+              }}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+            >
+              {date}
+            </Text>
           </VStack>
-        </HStack>
+        </View>
       </VStack>
     </Link>
   )
