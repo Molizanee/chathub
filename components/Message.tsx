@@ -3,11 +3,10 @@ import { Text, View } from 'react-native'
 
 interface MessageProps {
   message: string
-  dateSend: string
   userName: string | undefined
 }
 
-export const Message = ({ message, dateSend, userName }: MessageProps) => {
+export const Message = ({ message, userName }: MessageProps) => {
   return (
     <View
       style={{
@@ -41,7 +40,10 @@ export const Message = ({ message, dateSend, userName }: MessageProps) => {
           flexDirection: 'row',
           gap: 10,
           alignItems: 'center',
-          justifyContent: 'flex-end',
+          marginTop: 10,
+          ...(userName === 'You'
+            ? { justifyContent: 'flex-end' }
+            : { justifyContent: 'flex-end', flexDirection: 'row-reverse' }),
         }}
       >
         <Text
@@ -50,7 +52,7 @@ export const Message = ({ message, dateSend, userName }: MessageProps) => {
             color: '#9E9E9E',
           }}
         >
-          {dateSend}
+          {userName}
         </Text>
         <Avatar bgColor='#0FA6FA' size='sm'>
           <AvatarFallbackText>{userName && userName[0]}</AvatarFallbackText>

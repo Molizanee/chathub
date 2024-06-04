@@ -38,15 +38,20 @@ export default function ChatListScreen() {
             Add a contact to start a chat!
           </Text>
         ) : (
-          <ScrollView style={styles.messages}>
+          <ScrollView
+            style={styles.messages}
+            showsVerticalScrollIndicator={false}
+          >
             {filteredChats.map(chat => (
-              <UserCard
-                key={chat.id}
-                name={chat.name}
-                message={chat.lastMessage}
-                date={chat.lastUpdated.toLocaleString()}
-                contactId={chat.otherUid}
-              />
+              <View key={chat.id} style={styles.message}>
+                <UserCard
+                  key={chat.id}
+                  name={chat.name}
+                  message={chat.lastMessage}
+                  date={chat.lastUpdated.toLocaleString()}
+                  contactId={chat.otherUid}
+                />
+              </View>
             ))}
           </ScrollView>
         )}
@@ -75,5 +80,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     width: '100%',
+  },
+  message: {
+    flex: 1,
+    marginBottom: 20,
   },
 })

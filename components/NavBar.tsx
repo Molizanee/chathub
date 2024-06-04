@@ -1,6 +1,6 @@
 import {
   AtSignIcon,
-  Icon,
+  Icon as IconLib,
   MessageCircleIcon,
   SettingsIcon,
   ShareIcon,
@@ -8,15 +8,20 @@ import {
 import { Link } from 'expo-router'
 import { View, Text, StyleSheet } from 'react-native'
 import { useRoute } from '@react-navigation/native'
+import React from 'react'
 
 export const NavBar = () => {
   const route = useRoute()
   const routeName = route.name
 
+  const ForwardedIcon = React.forwardRef<typeof IconLib, any>((props, ref) => (
+    <IconLib ref={ref} {...props} />
+  ))
+
   return (
     <View style={styles.container}>
       <Link style={styles.iconLink} href='/chatList' asChild>
-        <Icon
+        <ForwardedIcon
           as={MessageCircleIcon}
           m='$2'
           w='$10'
@@ -25,7 +30,7 @@ export const NavBar = () => {
         />
       </Link>
       <Link style={styles.iconLink} href='/contacts' asChild>
-        <Icon
+        <ForwardedIcon
           as={AtSignIcon}
           m='$2'
           w='$10'
@@ -34,7 +39,7 @@ export const NavBar = () => {
         />
       </Link>
       <Link style={styles.iconLink} href='/settings' asChild>
-        <Icon
+        <ForwardedIcon
           as={SettingsIcon}
           m='$2'
           w='$10'
