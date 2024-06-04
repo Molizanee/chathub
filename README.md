@@ -57,7 +57,7 @@
 
 4. **Configurar Variáveis de Ambiente**
 
-   - Crie um arquivo `.env` na raiz do projeto e adicione as seguintes linhas:
+   - Crie um arquivo `.env` na raiz do projeto e adicione as seguintes linhas (Adicione os valores **sem as aspas**):
      ```plaintext
      EXPO_PUBLIC_API_KEY=Sua_Api_Key
      EXPO_PUBLIC_AUTH_DOMAIN=Seu_Auth_Domain
