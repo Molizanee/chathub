@@ -84,19 +84,19 @@
 
 ## Como Utilizar o ChatHub
 
-- Para começar a conversar, é necessário que ambos os dispositivos estejam com o app aberto simultaneamente, seja em um emulador ou em um celular. Na tela de contatos, adicione um contato usando o e-mail registrado no ChatHub. Após o contato ser adicionado, você pode enviar mensagens que serão recebidas automaticamente pela outra conta.
+- Para começar a conversar, na tela de contatos, adicione um contato usando o e-mail registrado no ChatHub. Após o contato ser adicionado, você pode enviar mensagens que serão recebidas automaticamente pela outra conta.
 
-  - **Observação:** Ao adicionar um contato, a outra conta não adicionará automaticamente o seu e-mail à lista de contatos dela, mas receberá suas mensagens quando enviadas.
+  - **Observação:** Ao adicionar um contato, a outra conta não adicionará automaticamente o seu e-mail à lista de contatos dela, mas receberá suas mensagens quando enviadas normalmente.
 
 ## Estrutura do Projeto
 
 O projeto ChatHub está organizado em três pastas principais, cada uma com um propósito específico dentro da arquitetura do aplicativo:
 
-- **/app:** Esta pasta contém todas as telas do aplicativo, organizando a interface com a qual o usuário interage. Cada tela é implementada como um componente React Native, facilitando a navegação e a manutenção do código.
+- **app/** Esta pasta contém todas as telas do aplicativo, organizando a interface com a qual o usuário interage. Cada tela é implementada como um componente React Native, facilitando a navegação e a manutenção do código.
 
-- **/components:** Contém os componentes reutilizáveis que compõem as interfaces das telas. Esses componentes incluem botões, campos de entrada, e outros elementos de UI que são utilizados em várias partes do aplicativo, promovendo a consistência e reduzindo a duplicidade de código.
+- **components/** Contém os componentes reutilizáveis que compõem as interfaces das telas. Esses componentes incluem botões, campos de entrada, e outros elementos de UI que são utilizados em várias partes do aplicativo, promovendo a consistência e reduzindo a duplicidade de código.
 
-- **/Firebase:** Armazena as funções responsáveis pela comunicação do aplicativo com o Firebase Firestore. Estas funções são usadas para manipular os dados dos contatos e dos chats, incluindo operações como adicionar, remover, e atualizar informações, além de escutar mudanças em tempo real para atualizar a interface do usuário conforme necessário.
+- **Firebase/** Armazena as funções responsáveis pela comunicação do aplicativo com o Firebase Firestore. Estas funções são usadas para manipular os dados dos contatos e dos chats, incluindo operações como adicionar, remover, e atualizar informações, além de escutar mudanças em tempo real para atualizar a interface do usuário conforme necessário.
 
 ## Informações Adicionais
 

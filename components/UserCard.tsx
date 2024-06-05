@@ -3,7 +3,6 @@ import {
   AvatarBadge,
   AvatarFallbackText,
   Heading,
-  HStack,
   VStack,
 } from '@gluestack-ui/themed'
 import { Link } from 'expo-router'

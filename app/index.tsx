@@ -1,3 +1,6 @@
+/**
+ * Login screen.
+ */
 import { View, Text, StyleSheet } from 'react-native'
 import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
@@ -15,6 +18,7 @@ export default function LoginScreen() {
     await signInFirebase(email, password, setError)
   }
 
+  // Handle error message in 7 seconds .
   useEffect(() => {
     if (error) {
       setTimeout(() => {

@@ -1,3 +1,6 @@
+/**
+ * Contacts screen.
+ */
 import { NavBar } from '@/components/NavBar'
 import { UserCard } from '@/components/UserCard'
 import { AddIcon } from '@gluestack-ui/themed'
@@ -9,6 +12,7 @@ import { fetchContactsFirebase } from '@/Firebase/Contacts'
 export default function Contacts() {
   const [contacts, setContacts] = useState<Array<any>>([])
 
+  // Fetch contacts from Firebase.
   useEffect(() => {
     fetchContactsFirebase(setContacts)
   }, [])

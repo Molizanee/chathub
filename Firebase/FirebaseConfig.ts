@@ -1,3 +1,6 @@
+/**
+ * Firebase Config file to initialize Firebase app and services.
+ */
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'

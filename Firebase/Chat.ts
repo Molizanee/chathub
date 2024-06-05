@@ -1,3 +1,6 @@
+/**
+ * Functions to manage chat functionalities using Firebase Firestore.
+ */
 import {
   addDoc,
   collection,
@@ -18,6 +21,8 @@ const auth = FIREBASE_AUTH
 
 export type SetChatsFunction = (chats: ChatData[]) => void
 
+// Retrieves and subscribes to the chat list of the current user.
+
 export const getChatListFirebase = async (
   setChats: SetChatsFunction
 ): Promise<() => void> => {
@@ -27,6 +32,8 @@ export const getChatListFirebase = async (
     return () => {}
   }
 }
+
+// Subscribes to chat updates for a specific user.
 
 export const subscribeToChatsFirebase = (
   uid: string,
@@ -44,6 +51,8 @@ export const subscribeToChatsFirebase = (
   return () => unsubscribe()
 }
 
+// Processes the snapshot of chat documents, updating the chat list.
+
 export const processChatSnapshotFirebase = async (
   snapshot: QuerySnapshot<DocumentData>,
   uid: string,
@@ -57,6 +66,8 @@ export const processChatSnapshotFirebase = async (
   const filteredChats = filterChatsByMessageFirebase(sortedChats)
   setChats(filteredChats)
 }
+
+// Creates a chat data object from a Firestore document.
 
 export const createChatDataFirebase = async (
   document: DocumentData,
@@ -77,6 +88,8 @@ export const createChatDataFirebase = async (
   }
 }
 
+// Retrieves the details of a list of participants.
+
 export const getParticipantDetailsFirebase = async (
   participantUids: string[]
 ): Promise<{ uid: string; name?: string; email?: string }[]> => {
@@ -91,6 +104,8 @@ export const getParticipantDetailsFirebase = async (
   )
 }
 
+// Sorts chat data by the time of the last message.
+
 export const sortChatsByUpdatedTimeFirebase = (
   chatsData: ChatData[]
 ): ChatData[] => {
@@ -99,6 +114,8 @@ export const sortChatsByUpdatedTimeFirebase = (
   )
 }
 
+// Filters chat data by the presence of a last message.
+
 export const filterChatsByMessageFirebase = (
   chatsData: ChatData[]
 ): ChatData[] => {
@@ -106,6 +123,9 @@ export const filterChatsByMessageFirebase = (
     chat => chat.lastMessage && chat.lastMessage.trim() !== ''
   )
 }
+
+// Creates a new chat document in Firestore.
+// If the chat already exists, it returns the chat ID.
 
 export const checkAndCreateChatFirebase = async (
   id: string,
@@ -145,6 +165,10 @@ export const checkAndCreateChatFirebase = async (
   }
 }
 
+// Subscribes to messages for a specific chat.
+// It updates the messages state with the latest messages.
+// It returns an unsubscribe function to stop listening to messages.
+
 export const subscribeToMessagesFirebase = (
   chatId: string,
   setMessages: (messages: CompleteMessage[]) => void
@@ -164,6 +188,9 @@ export const subscribeToMessagesFirebase = (
     setMessages(loadedMessages)
   })
 }
+
+// Sends a new message to a specific chat.
+// It updates the chat's last message and last updated time.
 
 export const sendMessageFirebase = async (
   chatId: string,

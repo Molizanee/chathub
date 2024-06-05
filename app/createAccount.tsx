@@ -1,3 +1,6 @@
+/**
+ * Create account screen.
+ */
 import { Text, View, StyleSheet } from 'react-native'
 import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
@@ -11,15 +14,17 @@ export default function CreateAccountScreen() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
+  // Handle sign up.
   const handleSignUp = async () => {
     await signUpFirebase(name, email, password, setError)
   }
 
+  // Handle error message in 7 seconds .
   useEffect(() => {
     if (error) {
       setTimeout(() => {
         setError('')
-      }, 15000)
+      }, 7000)
     }
   }, [error])
 

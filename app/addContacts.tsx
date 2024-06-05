@@ -1,3 +1,6 @@
+/**
+ * Add contacts screen.
+ */
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { NavBar } from '@/components/NavBar'

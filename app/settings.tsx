@@ -1,3 +1,6 @@
+/**
+ * Settings screen.
+ */
 import { NavBar } from '@/components/NavBar'
 import { signOutFirebase } from '@/Firebase/Auth'
 import { Button, ButtonText } from '@gluestack-ui/themed'

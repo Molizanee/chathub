@@ -1,3 +1,6 @@
+/**
+ * Firebase Firestore operations for managing user contacts.
+ */
 import {
   arrayUnion,
   collection,
@@ -11,6 +14,9 @@ import {
 import { FIREBASE_DB as db, FIREBASE_AUTH } from './FirebaseConfig'
 import { Contact } from './Types'
 const auth = FIREBASE_AUTH
+
+// Fetches the contacts of the current user from Firestore.
+// The contacts are stored as an array of user UIDs in the user document.
 
 export const fetchContactsFirebase = async (
   setContacts: (contacts: Contact[]) => void
@@ -33,6 +39,9 @@ export const fetchContactsFirebase = async (
     setContacts(contactsDetails.filter(Boolean) as Contact[])
   }
 }
+
+// Adds a contact to the current user's contacts list in Firestore.
+// The contact is added by email address, which is used to find the user document.
 
 export const handleAddContactFirebase = async (
   email: string,

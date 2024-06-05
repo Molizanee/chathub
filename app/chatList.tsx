@@ -1,3 +1,6 @@
+/**
+ * Chat lists screen.
+ */
 import { Input } from '@/components/Input'
 import { NavBar } from '@/components/NavBar'
 import { UserCard } from '@/components/UserCard'
@@ -10,6 +13,7 @@ export default function ChatListScreen() {
   const [chats, setChats] = useState<ChatData[]>([])
   const [filter, setFilter] = useState('')
 
+  // Fetch chat list from Firebase.
   useEffect(() => {
     const fetchAndUnsubscribe = async () => {
       const unsubscribe = await getChatListFirebase(setChats)
@@ -19,6 +23,7 @@ export default function ChatListScreen() {
     fetchAndUnsubscribe()
   }, [])
 
+  // Filter chats by name or email.
   const filteredChats = chats.filter(
     chat =>
       chat.name?.toLowerCase().includes(filter.toLowerCase()) ||

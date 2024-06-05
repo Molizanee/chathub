@@ -1,3 +1,6 @@
+/**
+ * Chat screen
+ */
 import { Input } from '@/components/Input'
 import { Message } from '@/components/Message'
 import {
@@ -34,14 +37,17 @@ export default function ConversationScreen() {
     name: 'User',
   })
 
+  // Get the chat ID from the URL.
   const { id }: { id: string } = useLocalSearchParams() ?? {
     id: '',
   }
 
+  // Check if chat exists and create it if it doesn't.
   useEffect(() => {
     checkAndCreateChatFirebase(id, setChatId, setOtherParticipant)
   }, [id])
 
+  // Subscribe to messages for the chat.
   useEffect(() => {
     if (chatId) {
       subscribeToMessagesFirebase(chatId, setMessages)
@@ -50,10 +56,12 @@ export default function ConversationScreen() {
 
   const scrollViewRef = useRef<ScrollView>(null)
 
+  // Scroll to the end of the messages when new messages are added.
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true })
   }, [messages])
 
+  // Send a new message to the chat.
   const handleSend = async () => {
     sendMessageFirebase(chatId, newMessage, setNewMessage)
   }
